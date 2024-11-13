@@ -84,7 +84,13 @@ export default function Contribute() {
 
     try {
       const username = await getCurrentUser(githubToken);
-      const branchName = `doc-${Date.now()}`;
+
+      const sanitizedTitle = formData.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
+
+      const branchName = `doc/${username}/${sanitizedTitle}`;
 
       await createBranch(username, githubToken, branchName);
       await new Promise((resolve) => setTimeout(resolve, 2000));
