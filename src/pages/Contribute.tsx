@@ -86,6 +86,10 @@ export default function Contribute() {
       const username = await getCurrentUser(githubToken);
       const branchName = `doc-${Date.now()}`;
 
+      await createBranch(username, githubToken, branchName);
+
+      await new Promise((resolve) => setTimeout(resolve, 2000));
+
       const { content: fileContent, sha } = await getFileContent(
         username,
         githubToken
@@ -205,6 +209,49 @@ export default function Contribute() {
     }
 
     return response.json();
+  }
+
+  async function createBranch(
+    username: string,
+    token: string,
+    branchName: string
+  ) {
+    const mainBranchResponse = await fetch(
+      `https://api.github.com/repos/${username}/BalDevCommeBack/git/ref/heads/main`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github.v3+json",
+        },
+      }
+    );
+
+    if (!mainBranchResponse.ok) {
+      throw new Error("Failed to get main branch reference");
+    }
+
+    const mainBranchData = await mainBranchResponse.json();
+    const mainSha = mainBranchData.object.sha;
+
+    const createBranchResponse = await fetch(
+      `https://api.github.com/repos/${username}/BalDevCommeBack/git/refs`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github.v3+json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ref: `refs/heads/${branchName}`,
+          sha: mainSha,
+        }),
+      }
+    );
+
+    if (!createBranchResponse.ok) {
+      throw new Error("Failed to create branch");
+    }
   }
 
   const categoryOptions = {
