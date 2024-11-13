@@ -96,6 +96,8 @@ export default {
     section: {
       title: "Contribute to Documentation",
       description: "Join our community and share your expertise",
+      helpText:
+        "A detailed guide will assist you throughout the contribution process",
       cards: {
         documentation: {
           title: "Documentation",

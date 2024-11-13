@@ -3,14 +3,13 @@ import { Globe } from "lucide-react";
 import { useTranslation } from "../hooks/useTranslation";
 
 export default function LanguageSelector() {
-  const { currentLanguage, setLanguage } = useTranslation();
+  const { language, setLanguage } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
 
   const languages = [
     { code: "en", label: "English" },
     { code: "fr", label: "Français" },
-    { code: "es", label: "Español" },
   ];
 
   useEffect(() => {
@@ -24,6 +23,10 @@ export default function LanguageSelector() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  if (!language) {
+    return null;
+  }
+
   return (
     <div className="relative" ref={menuRef}>
       <button
@@ -31,7 +34,7 @@ export default function LanguageSelector() {
         className="flex items-center space-x-2 text-gray-700 hover:text-indigo-600"
       >
         <Globe className="h-5 w-5" />
-        <span>{currentLanguage.toUpperCase()}</span>
+        <span>{language.toUpperCase()}</span>
       </button>
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
@@ -40,11 +43,11 @@ export default function LanguageSelector() {
               <button
                 key={lang.code}
                 onClick={() => {
-                  setLanguage(lang.code as "en" | "fr" | "es");
+                  setLanguage(lang.code as "en" | "fr");
                   setIsOpen(false);
                 }}
                 className={`block px-4 py-2 text-sm w-full text-left ${
-                  currentLanguage === lang.code
+                  language === lang.code
                     ? "bg-indigo-50 text-indigo-600"
                     : "text-gray-700 hover:bg-gray-50"
                 }`}
