@@ -11,33 +11,18 @@ export default function ContributeSection() {
       bgColor: "bg-indigo-100",
       title: t("contribute.section.cards.documentation.title"),
       description: t("contribute.section.cards.documentation.description"),
-      examples: [
-        "Guides d'utilisation",
-        "Concepts fondamentaux",
-        "Bonnes pratiques",
-      ],
     },
     {
       icon: <Code className="h-6 w-6 text-purple-600" />,
       bgColor: "bg-purple-100",
       title: t("contribute.section.cards.code.title"),
       description: t("contribute.section.cards.code.description"),
-      examples: [
-        "Exemples de code",
-        "Cas d'utilisation",
-        "Solutions techniques",
-      ],
     },
     {
       icon: <Users className="h-6 w-6 text-pink-600" />,
       bgColor: "bg-pink-100",
       title: t("contribute.section.cards.community.title"),
       description: t("contribute.section.cards.community.description"),
-      examples: [
-        "Retours d'expérience",
-        "Conseils pratiques",
-        "Astuces de développement",
-      ],
     },
   ];
 
@@ -66,22 +51,11 @@ export default function ContributeSection() {
                 {step.title}
               </h3>
               <p className="mt-2 text-gray-600">{step.description}</p>
-              <ul className="mt-4 space-y-2">
-                {step.examples.map((example, i) => (
-                  <li
-                    key={i}
-                    className="flex items-center text-sm text-gray-500"
-                  >
-                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full mr-2"></span>
-                    {example}
-                  </li>
-                ))}
-              </ul>
             </div>
           ))}
         </div>
 
-        <div className="mt-12 text-center space-y-4">
+        <div className="mt-12 text-center">
           <Link
             to="/contribute"
             className="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-lg shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 transition-colors"
@@ -89,9 +63,6 @@ export default function ContributeSection() {
             <Github className="h-5 w-5 mr-2" />
             {t("contribute.section.button")}
           </Link>
-          <p className="text-sm text-gray-500">
-            {t("contribute.section.helpText")}
-          </p>
         </div>
       </div>
     </div>
