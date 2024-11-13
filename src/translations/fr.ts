@@ -184,7 +184,8 @@ export default {
           token: "Le token GitHub est requis",
           unknown: "Une erreur inconnue est survenue",
         },
-        success: "Documentation soumise avec succès !",
+        success:
+          "Documentation soumise avec succès ! Vous allez être redirigé vers la page de création de pull request.",
       },
     },
   },

@@ -179,7 +179,8 @@ export default {
           token: "GitHub token is required",
           unknown: "An unknown error occurred",
         },
-        success: "Documentation submitted successfully!",
+        success:
+          "Documentation submitted successfully! You will be redirected to create a pull request.",
       },
     },
   },

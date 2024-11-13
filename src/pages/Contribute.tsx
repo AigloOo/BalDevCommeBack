@@ -87,7 +87,6 @@ export default function Contribute() {
       const branchName = `doc-${Date.now()}`;
 
       await createBranch(username, githubToken, branchName);
-
       await new Promise((resolve) => setTimeout(resolve, 2000));
 
       const { content: fileContent, sha } = await getFileContent(
@@ -125,7 +124,34 @@ export default function Contribute() {
         sha
       );
 
+      const prTitle = `Documentation: ${formData.title}`;
+      const prBody = `
+### Nouvelle Documentation Ajoutée
+
+**Catégorie:** ${formData.category}
+**Titre:** ${formData.title}
+
+### Description
+${formData.content.substring(0, 200)}...
+
+### Aperçu
+- Type: ${formData.previewType}
+- Code exemple inclus: ${formData.code ? "Oui" : "Non"}
+
+### Vérification
+- [ ] Le contenu est correct et bien formaté
+- [ ] Les exemples de code sont fonctionnels
+- [ ] L'aperçu est pertinent
+      `;
+
+      const prUrl = `https://github.com/AigloOo/BalDevCommeBack/compare/main...${username}:BalDevCommeBack:${branchName}?quick_pull=1&title=${encodeURIComponent(
+        prTitle
+      )}&body=${encodeURIComponent(prBody)}`;
+
       setIsSubmitting(false);
+
+      window.open(prUrl, "_blank");
+
       alert(t("contribute.page.submit.success"));
       resetForm();
     } catch (error) {
