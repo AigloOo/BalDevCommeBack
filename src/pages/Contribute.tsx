@@ -2,42 +2,39 @@ import React, { useState } from "react";
 import { ChevronDown, ChevronUp, Github, Book, XCircle } from "lucide-react";
 import { useTranslation } from "../hooks/useTranslation";
 
+interface Section {
+  title: string;
+  content: string;
+  code?: string;
+  preview?: {
+    type: "visual" | "console";
+    html?: string;
+    output?: string;
+  };
+}
+
+interface Category {
+  title: string;
+  sections: Section[];
+}
+
+interface DocumentationContent {
+  [key: string]: Category;
+}
+
+interface FileData {
+  content: DocumentationContent;
+  sha: string;
+}
+
 interface FormData {
-  category: string;
   title: string;
   content: string;
   code: string;
+  category: string;
   previewType: "visual" | "console";
   previewContent: string;
 }
-
-const encodeBase64 = (str: string): string => {
-  return btoa(unescape(encodeURIComponent(str)));
-};
-
-const decodeBase64 = (str: string): string => {
-  return decodeURIComponent(escape(atob(str)));
-};
-
-const validateGithubToken = async (token: string): Promise<boolean> => {
-  try {
-    const response = await fetch("https://api.github.com/user", {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        Accept: "application/vnd.github.v3+json",
-      },
-    });
-
-    if (!response.ok) {
-      return false;
-    }
-
-    const scopes = response.headers.get("x-oauth-scopes")?.split(", ") || [];
-    return scopes.includes("repo");
-  } catch {
-    return false;
-  }
-};
 
 export default function Contribute() {
   const [formData, setFormData] = useState<FormData>({
@@ -61,6 +58,18 @@ export default function Contribute() {
 
   const { t } = useTranslation();
 
+  const resetForm = () => {
+    setFormData({
+      category: "javascript",
+      title: "",
+      content: "",
+      code: "",
+      previewType: "visual",
+      previewContent: "",
+    });
+    setGithubToken("");
+  };
+
   const toggleSection = (section: keyof typeof openSections) => {
     setOpenSections((prev) => ({
       ...prev,
@@ -73,139 +82,14 @@ export default function Contribute() {
     setError(null);
     setIsSubmitting(true);
 
-    if (!githubToken) {
-      setError(t("contribute.page.submit.error.token"));
-      setIsSubmitting(false);
-      return;
-    }
-
     try {
-      const isValidToken = await validateGithubToken(githubToken);
-      if (!isValidToken) {
-        setError("Invalid GitHub token or missing 'repo' scope permissions");
-        setIsSubmitting(false);
-        return;
-      }
+      const username = await getCurrentUser(githubToken);
+      const branchName = `doc-${Date.now()}`;
 
-      const userResponse = await fetch("https://api.github.com/user", {
-        headers: {
-          Authorization: `Bearer ${githubToken}`,
-          Accept: "application/vnd.github.v3+json",
-        },
-      });
-
-      if (!userResponse.ok) {
-        throw new Error("Failed to get user information");
-      }
-
-      const userData = await userResponse.json();
-      const username = userData.login;
-
-      const owner = "AigloOo";
-      const repo = "BalDevCommeBack";
-
-      const forkResponse = await fetch(
-        `https://api.github.com/repos/${owner}/${repo}/forks`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${githubToken}`,
-            Accept: "application/vnd.github.v3+json",
-          },
-        }
+      const { content: fileContent, sha } = await getFileContent(
+        username,
+        githubToken
       );
-
-      if (!forkResponse.ok) {
-        throw new Error("Failed to fork repository");
-      }
-
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-
-      const sanitizedTitle = formData.title
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/(^-|-$)/g, "");
-
-      const branchName = `doc-${sanitizedTitle}-${Date.now()}`;
-
-      const mainBranchResponse = await fetch(
-        `https://api.github.com/repos/${username}/${repo}/git/ref/heads/main`,
-        {
-          headers: {
-            Authorization: `Bearer ${githubToken}`,
-            Accept: "application/vnd.github.v3+json",
-          },
-        }
-      );
-
-      if (!mainBranchResponse.ok) {
-        const errorData = await mainBranchResponse.json();
-        if (mainBranchResponse.status === 403) {
-          throw new Error(
-            "Insufficient permissions. Please check your GitHub token has the 'repo' scope."
-          );
-        } else if (mainBranchResponse.status === 404) {
-          throw new Error("Repository not found or token is invalid.");
-        }
-        throw new Error(`Failed to get main branch: ${errorData.message}`);
-      }
-
-      const mainBranchData = await mainBranchResponse.json();
-      const mainSha = mainBranchData.object.sha;
-
-      const treeResponse = await fetch(
-        `https://api.github.com/repos/${username}/${repo}/git/trees/${mainSha}`,
-        {
-          headers: {
-            Authorization: `Bearer ${githubToken}`,
-            Accept: "application/vnd.github.v3+json",
-          },
-        }
-      );
-
-      if (!treeResponse.ok) {
-        const errorData = await treeResponse.json();
-        throw new Error(`Failed to get tree: ${errorData.message}`);
-      }
-
-      const createBranchResponse = await fetch(
-        `https://api.github.com/repos/${username}/${repo}/git/refs`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${githubToken}`,
-            Accept: "application/vnd.github.v3+json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            ref: `refs/heads/${branchName}`,
-            sha: mainSha,
-          }),
-        }
-      );
-
-      if (!createBranchResponse.ok) {
-        const errorData = await createBranchResponse.json();
-        throw new Error(`Failed to create branch: ${errorData.message}`);
-      }
-
-      const fileResponse = await fetch(
-        `https://api.github.com/repos/${username}/${repo}/contents/src/data/documentation.json?ref=main`,
-        {
-          headers: {
-            Authorization: `Bearer ${githubToken}`,
-            Accept: "application/vnd.github.v3+json",
-          },
-        }
-      );
-
-      if (!fileResponse.ok) {
-        const errorData = await fileResponse.json();
-        throw new Error(`Failed to get file: ${errorData.message}`);
-      }
-
-      const fileData = await fileResponse.json();
-      const existingContent = JSON.parse(decodeBase64(fileData.content));
 
       const newSection = {
         title: formData.title,
@@ -219,80 +103,109 @@ export default function Contribute() {
       };
 
       const updatedContent = {
-        ...existingContent,
+        ...fileContent,
         [formData.category]: {
-          ...existingContent[formData.category],
+          ...fileContent[formData.category],
           sections: [
-            ...existingContent[formData.category].sections,
+            ...(fileContent[formData.category]?.sections || []),
             newSection,
           ],
         },
       };
 
-      const updateFileResponse = await fetch(
-        `https://api.github.com/repos/${username}/${repo}/contents/src/data/documentation.json`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${githubToken}`,
-            Accept: "application/vnd.github.v3+json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            message: `Add documentation for ${formData.title}`,
-            content: encodeBase64(JSON.stringify(updatedContent, null, 2)),
-            sha: fileData.sha,
-            branch: branchName,
-          }),
-        }
+      await createCommit(
+        username,
+        githubToken,
+        branchName,
+        updatedContent,
+        sha
       );
 
-      if (!updateFileResponse.ok) {
-        const errorData = await updateFileResponse.json();
-        throw new Error(`Failed to update file: ${errorData.message}`);
-      }
-
-      const prResponse = await fetch(
-        `https://api.github.com/repos/${username}/${repo}/pulls`,
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${githubToken}`,
-            Accept: "application/vnd.github.v3+json",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            title: `Add documentation: ${formData.title}`,
-            body: `Added new documentation section for ${formData.title}`,
-            head: `${username}:${branchName}`,
-            base: "main",
-          }),
-        }
-      );
-
-      if (!prResponse.ok) {
-        const errorData = await prResponse.json();
-        throw new Error(`Failed to create PR: ${errorData.message}`);
-      }
-
+      setIsSubmitting(false);
       alert(t("contribute.page.submit.success"));
-      setFormData({
-        category: "javascript",
-        title: "",
-        content: "",
-        code: "",
-        previewType: "visual",
-        previewContent: "",
-      });
+      resetForm();
     } catch (error) {
       console.error("Error submitting documentation:", error);
       setError(
         error instanceof Error ? error.message : "An unknown error occurred"
       );
-    } finally {
       setIsSubmitting(false);
     }
   };
+
+  async function getCurrentUser(token: string) {
+    const response = await fetch("https://api.github.com/user", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github.v3+json",
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to get user information");
+    }
+
+    const data = await response.json();
+    return data.login;
+  }
+
+  async function getFileContent(username: string, token: string) {
+    const response = await fetch(
+      `https://api.github.com/repos/${username}/BalDevCommeBack/contents/src/data/documentation.json`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github.v3+json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to get file content");
+    }
+
+    const data = await response.json();
+    const decodedContent = JSON.parse(atob(data.content));
+    return {
+      content: decodedContent,
+      sha: data.sha,
+    };
+  }
+
+  async function createCommit(
+    username: string,
+    token: string,
+    branchName: string,
+    content: FileData,
+    sha: string
+  ) {
+    const encodedContent = btoa(JSON.stringify(content, null, 2));
+
+    const response = await fetch(
+      `https://api.github.com/repos/${username}/BalDevCommeBack/contents/src/data/documentation.json`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          Accept: "application/vnd.github.v3+json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          message: `Add documentation for ${formData.title}`,
+          content: encodedContent,
+          sha: sha,
+          branch: branchName,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(`Failed to update file: ${error.message}`);
+    }
+
+    return response.json();
+  }
 
   const categoryOptions = {
     javascript: t("contribute.page.structure.category.options.javascript"),
