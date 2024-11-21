@@ -82,7 +82,8 @@ npm run build
 
 ### Comment Contribuer
 
-Merci de votre intérêt pour contribuer à BalDev Documentation ! Voici les différentes façons d'améliorer le projet :
+Merci de votre intérêt pour contribuer à BalDev Documentation ! Voici les différentes façons d'améliorer le projet:
+(le systeme va etre améliorer grance a la page https://baldev.jean-winter.fr/contribute
 
 #### 1. Ajouter ou Mettre à Jour la Documentation
 
