@@ -1,10 +1,18 @@
-import {
-  TranslationProvider,
-  useTranslation as useTranslationHook,
-} from "../contexts/TranslationContext";
+import { useContext } from "react";
+import { TranslationContext } from "../contexts/TranslationContext";
 
-export const useTranslation = () => {
-  return useTranslationHook();
-};
+export function useTranslation() {
+  const context = useContext(TranslationContext);
 
-export { TranslationProvider };
+  if (!context) {
+    throw new Error("useTranslation must be used within a TranslationProvider");
+  }
+
+  return {
+    t: context.t,
+    currentLanguage: context.currentLanguage,
+    isLoading: context.isLoading,
+    changeLanguage: context.changeLanguage,
+    getDocumentation: context.getDocumentation,
+  };
+}

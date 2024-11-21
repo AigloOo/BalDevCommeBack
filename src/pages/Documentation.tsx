@@ -1,4 +1,4 @@
-import { useParams, Link, useLocation, Navigate } from "react-router-dom";
+import { useParams, Link, Navigate } from "react-router-dom";
 import DOMPurify from "dompurify";
 import { useEffect, useState } from "react";
 import { ChevronRight, BookOpen, X, Menu } from "lucide-react";
@@ -6,6 +6,7 @@ import { useTranslation } from "../hooks/useTranslation";
 import Sidebar from "../components/layout/Sidebar";
 import ShareSection from "../components/documentation/ShareSection";
 import ContributeBanner from "../components/features/ContributeBanner";
+import { documentationData } from "../data/documentation";
 
 interface Section {
   title: string;
@@ -35,10 +36,23 @@ interface Documentation {
 }
 
 export default function Documentation() {
-  const { category } = useParams<{ category?: string }>();
-  const location = useLocation();
-  const { getDocumentation, isLoading, currentLanguage } = useTranslation();
+  const { category } = useParams();
+  const { currentLanguage, getDocumentation } = useTranslation();
+  const [currentDocs, setCurrentDocs] = useState<Documentation | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    if (category) {
+      const translatedDocs = getDocumentation(category);
+      if (translatedDocs) {
+        setCurrentDocs(JSON.parse(translatedDocs));
+      } else {
+        const defaultDocs =
+          documentationData[category as keyof typeof documentationData];
+        setCurrentDocs(defaultDocs);
+      }
+    }
+  }, [category, currentLanguage, getDocumentation]);
 
   const scrollToHash = () => {
     setTimeout(() => {
@@ -87,12 +101,6 @@ export default function Documentation() {
     };
   }, [location.hash, category]);
 
-  const currentDocs = category
-    ? getDocumentation(
-        category as "javascript" | "react" | "css" | "nodejs" | "html"
-      )
-    : getDocumentation("javascript");
-
   if (!currentDocs) {
     return <Navigate to="/docs/javascript" replace />;
   }
@@ -133,14 +141,6 @@ export default function Documentation() {
       console.error("Failed to copy code:", err);
     }
   };
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600"></div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen">

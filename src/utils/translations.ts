@@ -7,13 +7,26 @@ const translations = {
       search: "Search",
       home: "Home",
     },
-    common: {
-      copyCode: "Copy Code",
-      preview: "Preview",
-      output: "Output",
+    home: {
+      title: "Web Development Documentation",
+      subtitle: "By the Community, For the Community",
+      description:
+        "Discover, contribute, and learn from the collective knowledge of developers worldwide.",
       searchPlaceholder: "Search documentation...",
-      noResults: "No results found for",
-      startTyping: "Start typing to search...",
+    },
+    features: {
+      comprehensive: {
+        title: "Comprehensive Documentation",
+        description: "Detailed guides and references for web development",
+      },
+      interactive: {
+        title: "Interactive Examples",
+        description: "Learn by doing with live code examples",
+      },
+      community: {
+        title: "Community Driven",
+        description: "Created by developers, for developers",
+      },
     },
   },
   fr: {
@@ -22,28 +35,27 @@ const translations = {
       search: "Rechercher",
       home: "Accueil",
     },
-    common: {
-      copyCode: "Copier le code",
-      preview: "Aperçu",
-      output: "Sortie",
+    home: {
+      title: "Documentation Développement Web",
+      subtitle: "Par la Communauté, Pour la Communauté",
+      description:
+        "Découvrez, contribuez et apprenez grâce aux connaissances collectives des développeurs du monde entier.",
       searchPlaceholder: "Rechercher dans la documentation...",
-      noResults: "Aucun résultat trouvé pour",
-      startTyping: "Commencez à taper pour rechercher...",
     },
-  },
-  es: {
-    navigation: {
-      documentation: "Documentación",
-      search: "Buscar",
-      home: "Inicio",
-    },
-    common: {
-      copyCode: "Copiar código",
-      preview: "Vista previa",
-      output: "Salida",
-      searchPlaceholder: "Buscar en la documentación...",
-      noResults: "No se encontraron resultados para",
-      startTyping: "Empiece a escribir para buscar...",
+    features: {
+      comprehensive: {
+        title: "Documentation Complète",
+        description: "Guides détaillés et références pour le développement web",
+      },
+      interactive: {
+        title: "Exemples Interactifs",
+        description:
+          "Apprenez en pratiquant avec des exemples de code en direct",
+      },
+      community: {
+        title: "Géré par la Communauté",
+        description: "Créé par des développeurs, pour des développeurs",
+      },
     },
   },
 };
