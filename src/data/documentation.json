@@ -11,6 +11,15 @@
           "type": "console",
           "output": "Hello World\n1\n2\n3\nHello John"
         }
+      },
+      {
+        "title": "Different types of variables ",
+        "content": "You can create different types of variables to do some specific things like store the age of a person by example.\n\nThere are three ways to define variables :\n\n\nVar can be reassigned and redeclared within the same scope.\n\nLet Can be reassigned, but cannot be redeclared within the same scope.\n\nConst Cannot be reassigned, but the properties of referenced objects or arrays can be modified.\n",
+        "code": "var age = 18;\nvar age = 19;\n\nlet day = 3;\nday = 4;\n\nconst object = { key: \"chocolate\" };\nobject.key = \"coffee\";\n\n",
+        "preview": {
+          "type": "console",
+          "output": ""
+        }
       }
     ]
   },
