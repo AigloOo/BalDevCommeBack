@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import { useTranslation } from "../hooks/useTranslation";
 import GitHubStats from "../components/stats/GitHubStats";
-import ContributeSection from "../components/features/ContributeSection";
+import Contributors from "../components/features/Contributors";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -187,6 +187,7 @@ export default function Home() {
             </div>
 
             <GitHubStats stats={stats} />
+            <Contributors />
           </div>
         </div>
 
@@ -252,7 +253,6 @@ export default function Home() {
             </Link>
           </div>
         </div>
-        <ContributeSection />
       </div>
     </div>
   );
