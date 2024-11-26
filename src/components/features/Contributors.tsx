@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { ExternalLink, Award, Clock } from "lucide-react";
+import { motion } from "framer-motion";
 
 interface Contributor {
   login: string;
@@ -58,36 +59,52 @@ export default function Contributors() {
   }
 
   return (
-    <div className="py-12 bg-white">
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay: 0.5 }}
+      className="mt-12   py-12 bg-white rounded-2xl shadow-xl border border-gray-100 hover:shadow-2xl transition-all duration-300"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-3xl font-bold text-gray-900 mb-8">
+        <motion.h2
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          className="text-3xl font-bold mb-8 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text text-transparent"
+        >
           Our Contributors
-        </h2>
+        </motion.h2>
         <div className="grid grid-cols-2 gap-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {contributors.map((contributor) => (
-            <a
+          {contributors.map((contributor, index) => (
+            <motion.a
               key={contributor.login}
               href={contributor.html_url}
               target="_blank"
               rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 * index }}
+              whileHover={{ y: -8 }}
               className="group"
             >
-              <div className="flex flex-col items-center p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-all transform hover:-translate-y-1">
+              <div className="relative flex flex-col items-center p-6 rounded-2xl bg-white shadow-xl hover:shadow-2xl transition-all duration-300">
+                <div className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-indigo-500 to-purple-600 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-b-2xl" />
                 <div className="relative">
-                  <img
+                  <motion.img
                     src={contributor.avatar_url}
                     alt={contributor.login}
                     className="w-16 h-16 rounded-full object-cover border-2 border-gray-200 group-hover:border-indigo-500 transition-colors"
+                    whileHover={{ scale: 1.1, rotate: 5 }}
+                    transition={{ type: "spring", stiffness: 400 }}
                   />
-                  <ExternalLink className="absolute -top-1 -right-1 h-4 w-4 text-gray-400 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <ExternalLink className="absolute -top-1 -right-1 h-4 w-4 text-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </div>
-                <div className="mt-3 text-center">
-                  <p className="text-sm font-medium text-gray-900">
+                <div className="mt-4 text-center">
+                  <p className="text-sm font-bold text-gray-900">
                     {contributor.login}
                   </p>
                   {specialBadges[contributor.login] && (
                     <div
-                      className={`py-1 inline-flex items-center px-2  rounded-full text-xs font-medium text-white mt-1 ${
+                      className={`py-1 inline-flex items-center px-2 rounded-full text-xs font-medium text-white mt-2 ${
                         specialBadges[contributor.login].color
                       }`}
                     >
@@ -97,15 +114,15 @@ export default function Contributors() {
                       </span>
                     </div>
                   )}
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-gray-500 mt-2">
                     {contributor.contributions} contributions
                   </p>
                 </div>
               </div>
-            </a>
+            </motion.a>
           ))}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

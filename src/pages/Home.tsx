@@ -12,6 +12,7 @@ import {
 import { useTranslation } from "../hooks/useTranslation";
 import GitHubStats from "../components/stats/GitHubStats";
 import Contributors from "../components/features/Contributors";
+import { motion } from "framer-motion";
 
 export default function Home() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -115,144 +116,186 @@ export default function Home() {
 
   const features = [
     {
-      icon: <BookOpen className="h-8 w-8 text-indigo-600" />,
+      icon: <BookOpen className="h-10 w-10 text-indigo-600" />,
       title: t("features.comprehensive.title"),
       description: t("features.comprehensive.description"),
     },
     {
-      icon: <Users className="h-8 w-8 text-indigo-600" />,
+      icon: <Users className="h-10 w-10 text-indigo-600" />,
       title: t("features.community.title"),
       description: t("features.community.description"),
     },
     {
-      icon: <Code2 className="h-8 w-8 text-indigo-600" />,
+      icon: <Code2 className="h-10 w-10 text-indigo-600" />,
       title: t("features.interactive.title"),
       description: t("features.interactive.description"),
     },
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-indigo-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="pt-16 pb-12 md:pt-24 md:pb-20">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          className="pt-20 pb-16 md:pt-28 md:pb-24"
+        >
           <div className="text-center">
-            <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
-              <span className="block">{t("home.title")}</span>
-              <span className="block text-indigo-600 mt-2">
-                {t("home.subtitle")}
+            <motion.h1
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.7 }}
+              className="text-5xl tracking-tight font-extrabold text-gray-900 sm:text-6xl md:text-7xl"
+            >
+              <span className="block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
+                {t("home.title")}
               </span>
-            </h1>
-            <p className="mt-6 max-w-2xl mx-auto text-lg text-gray-500">
-              {t("home.description")}
-            </p>
+              <motion.span
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                className="block text-indigo-600 mt-3"
+              >
+                {t("home.subtitle")}
+              </motion.span>
+            </motion.h1>
 
-            <div className="mt-8">
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.5 }}
+              className="mt-8 max-w-2xl mx-auto text-xl text-gray-600 leading-relaxed"
+            >
+              {t("home.description")}
+            </motion.p>
+
+            <motion.div
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.6 }}
+              className="mt-10"
+            >
               <form onSubmit={handleSearch} className="max-w-xl mx-auto">
-                <div className="relative rounded-full shadow-sm">
+                <div className="relative rounded-full shadow-lg">
                   <input
                     type="text"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={t("home.searchPlaceholder")}
-                    className="block w-full pl-6 pr-12 py-4 rounded-full border-2 border-gray-300 focus:ring-2 focus:ring-indigo-600 focus:border-transparent"
+                    className="block w-full pl-8 pr-14 py-5 rounded-full border-2 border-indigo-100 focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-300 text-lg"
                   />
                   <button
                     type="submit"
-                    className="absolute right-4 top-1/2 transform -translate-y-1/2"
+                    className="absolute right-5 top-1/2 transform -translate-y-1/2"
                   >
-                    <Search className="h-5 w-5 text-gray-400 hover:text-indigo-600" />
+                    <Search className="h-6 w-6 text-indigo-600 hover:text-indigo-800 transition-colors duration-200" />
                   </button>
                 </div>
               </form>
-            </div>
+            </motion.div>
 
-            <div className="mt-12 grid grid-cols-1 gap-8 sm:grid-cols-3">
+            <div className="mt-16 grid grid-cols-1 gap-10 sm:grid-cols-3">
               {features.map((feature, index) => (
-                <div
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 * index }}
                   key={index}
-                  className="relative group bg-white p-6 rounded-xl shadow-sm hover:shadow-md transition-all duration-200"
+                  className="relative group bg-white p-8 rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300"
                 >
-                  <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-indigo-500 to-indigo-600 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-200" />
+                  <div className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-indigo-500 to-purple-600 transform origin-left scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-b-2xl" />
                   <div className="flex flex-col items-center">
-                    <div className="mb-4">{feature.icon}</div>
-                    <h3 className="text-lg font-semibold text-gray-900">
+                    <motion.div
+                      whileHover={{ scale: 1.2, rotate: 5 }}
+                      transition={{ type: "spring", stiffness: 400 }}
+                      className="mb-6"
+                    >
+                      {feature.icon}
+                    </motion.div>
+                    <h3 className="text-xl font-bold text-gray-900 mb-3">
                       {feature.title}
                     </h3>
-                    <p className="mt-2 text-sm text-gray-500 text-center">
+                    <p className="text-gray-600 text-center leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
-                </div>
+                </motion.div>
               ))}
             </div>
 
             <GitHubStats stats={stats} />
             <Contributors />
           </div>
-        </div>
+        </motion.div>
 
-        <div className="py-12 border-t border-gray-200">
-          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-            <Link to="/docs/html" className="group">
-              <div className="relative rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-indigo-500 to-indigo-600 transform origin-bottom scale-x-0 group-hover:scale-x-100 transition-transform"></div>
-                <Code2 className="h-8 w-8 text-indigo-600 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900">HTML</h3>
-                <p className="mt-2 text-gray-500">
-                  Core HTML concepts, semantic markup, and accessibility best
-                  practices.
-                </p>
-              </div>
-            </Link>
-
-            <Link to="/docs/css" className="group">
-              <div className="relative rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-indigo-500 to-indigo-600 transform origin-bottom scale-x-0 group-hover:scale-x-100 transition-transform"></div>
-                <Layout className="h-8 w-8 text-indigo-600 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900">CSS</h3>
-                <p className="mt-2 text-gray-500">
-                  Modern layouts, animations, and responsive design techniques.
-                </p>
-              </div>
-            </Link>
-
-            <Link to="/docs/javascript" className="group">
-              <div className="relative rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-indigo-500 to-indigo-600 transform origin-bottom scale-x-0 group-hover:scale-x-100 transition-transform"></div>
-                <Terminal className="h-8 w-8 text-indigo-600 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900">
-                  JavaScript
-                </h3>
-                <p className="mt-2 text-gray-500">
-                  Modern JavaScript features, async programming, and best
-                  practices.
-                </p>
-              </div>
-            </Link>
-
-            <Link to="/docs/nodejs" className="group">
-              <div className="relative rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-indigo-500 to-indigo-600 transform origin-bottom scale-x-0 group-hover:scale-x-100 transition-transform"></div>
-                <Database className="h-8 w-8 text-indigo-600 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900">Node.js</h3>
-                <p className="mt-2 text-gray-500">
-                  Server-side JavaScript, APIs, and backend development.
-                </p>
-              </div>
-            </Link>
-
-            <Link to="/docs/react" className="group">
-              <div className="relative rounded-lg p-6 bg-white shadow-sm hover:shadow-md transition-shadow">
-                <div className="absolute inset-x-0 bottom-0 h-2 bg-gradient-to-r from-indigo-500 to-indigo-600 transform origin-bottom scale-x-0 group-hover:scale-x-100 transition-transform"></div>
-                <Code2 className="h-8 w-8 text-indigo-600 mb-4" />
-                <h3 className="text-xl font-semibold text-gray-900">React</h3>
-                <p className="mt-2 text-gray-500">
-                  Components, hooks, state management, and React patterns.
-                </p>
-              </div>
-            </Link>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9 }}
+          className="py-16 border-t border-gray-100"
+        >
+          <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
+            {[
+              {
+                to: "/docs/html",
+                icon: <Code2 className="h-10 w-10 text-indigo-600 mb-5" />,
+                title: "HTML",
+                description:
+                  "Core HTML concepts, semantic markup, and accessibility best practices.",
+              },
+              {
+                to: "/docs/css",
+                icon: <Layout className="h-10 w-10 text-indigo-600 mb-5" />,
+                title: "CSS",
+                description:
+                  "Modern layouts, animations, and responsive design techniques.",
+              },
+              {
+                to: "/docs/javascript",
+                icon: <Terminal className="h-10 w-10 text-indigo-600 mb-5" />,
+                title: "JavaScript",
+                description:
+                  "Modern JavaScript features, async programming, and best practices.",
+              },
+              {
+                to: "/docs/nodejs",
+                icon: <Database className="h-10 w-10 text-indigo-600 mb-5" />,
+                title: "Node.js",
+                description:
+                  "Server-side JavaScript, APIs, and backend development.",
+              },
+              {
+                to: "/docs/react",
+                icon: <Code2 className="h-10 w-10 text-indigo-600 mb-5" />,
+                title: "React",
+                description:
+                  "Components, hooks, state management, and React patterns.",
+              },
+            ].map((item, index) => (
+              <motion.div
+                key={item.to}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 * index }}
+                whileHover={{ y: -8 }}
+              >
+                <Link to={item.to} className="group">
+                  <div className="relative rounded-2xl p-8 bg-white shadow-xl hover:shadow-2xl transition-all duration-300">
+                    <div className="absolute inset-x-0 bottom-0 h-3 bg-gradient-to-r from-indigo-500 to-purple-600 transform origin-bottom scale-x-0 group-hover:scale-x-100 transition-transform duration-300 rounded-b-2xl"></div>
+                    {item.icon}
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                      {item.title}
+                    </h3>
+                    <p className="text-gray-600 leading-relaxed">
+                      {item.description}
+                    </p>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
