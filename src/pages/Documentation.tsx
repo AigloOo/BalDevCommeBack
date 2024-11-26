@@ -1,12 +1,13 @@
-import { useParams, Link, Navigate } from "react-router-dom";
+import { useParams, Navigate, useLocation, Link } from "react-router-dom";
 import DOMPurify from "dompurify";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { ChevronRight, BookOpen, X, Menu } from "lucide-react";
 import { useTranslation } from "../hooks/useTranslation";
 import Sidebar from "../components/layout/Sidebar";
-import ShareSection from "../components/documentation/ShareSection";
 import ContributeBanner from "../components/features/ContributeBanner";
 import { documentationData } from "../data/documentation";
+import ShareSection from "../components/documentation/ShareSection";
+import { toast } from "../ui/Toast";
 
 interface Section {
   title: string;
@@ -35,71 +36,40 @@ interface Documentation {
   };
 }
 
+interface DocumentationData {
+  [key: string]: Documentation;
+}
+
 export default function Documentation() {
   const { category } = useParams();
-  const { currentLanguage, getDocumentation } = useTranslation();
-  const [currentDocs, setCurrentDocs] = useState<Documentation | null>(null);
+  const location = useLocation();
+  const { currentLanguage, t } = useTranslation();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  useEffect(() => {
-    if (category) {
-      const translatedDocs = getDocumentation(category);
-      if (translatedDocs) {
-        setCurrentDocs(JSON.parse(translatedDocs));
-      } else {
-        const defaultDocs =
-          documentationData[category as keyof typeof documentationData];
-        setCurrentDocs(defaultDocs);
-      }
-    }
-  }, [category, currentLanguage, getDocumentation]);
+  const currentDocs = (documentationData as DocumentationData)[
+    category as string
+  ];
 
-  const scrollToHash = () => {
-    setTimeout(() => {
-      const hash = window.location.hash.replace("#", "");
-      if (hash) {
-        const element = document.getElementById(hash);
-        if (element) {
-          const headerOffset = 100;
-          const elementPosition = element.getBoundingClientRect().top;
-          const offsetPosition =
-            elementPosition + window.pageYOffset - headerOffset;
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: "smooth",
-          });
-        }
+  const scrollToSection = useCallback(
+    (sectionId: string) => {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        section.scrollIntoView({ behavior: "smooth" });
+        const newUrl = `/docs/${category}#${sectionId}`;
+        window.history.pushState({}, "", newUrl);
       }
-    }, 300);
-  };
+    },
+    [category]
+  );
 
   useEffect(() => {
     const hash = location.hash.replace("#", "");
     if (hash) {
       setTimeout(() => {
-        const element = document.getElementById(hash);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth" });
-        }
+        scrollToSection(hash);
       }, 100);
     }
-  }, [location.hash, category]);
-
-  useEffect(() => {
-    const handleHashChange = () => {
-      scrollToHash();
-    };
-
-    if (location.hash) {
-      scrollToHash();
-    }
-
-    window.addEventListener("hashchange", handleHashChange);
-    return () => {
-      window.removeEventListener("hashchange", handleHashChange);
-    };
-  }, [location.hash, category]);
+  }, [location.hash, scrollToSection]);
 
   if (!currentDocs) {
     return <Navigate to="/docs/javascript" replace />;
@@ -127,7 +97,8 @@ export default function Documentation() {
     return docs.translations?.[currentLanguage]?.title ?? docs.title;
   };
 
-  const sanitizeHTML = (html: string) => {
+  const sanitizeHTML = (html: string | undefined) => {
+    if (!html) return { __html: "" };
     return {
       __html: DOMPurify.sanitize(html),
     };
@@ -137,6 +108,11 @@ export default function Documentation() {
     if (!code) return;
     try {
       await navigator.clipboard.writeText(code);
+      toast({
+        title: t("documentation.common.copyCode"),
+        description: t("documentation.common.linkCopied"),
+        duration: 2000,
+      });
     } catch (err) {
       console.error("Failed to copy code:", err);
     }
@@ -188,104 +164,66 @@ export default function Documentation() {
               <span>{getTranslatedTitle(currentDocs)}</span>
             </h1>
             <div className="mt-8 space-y-12">
-              {currentDocs?.sections &&
-                Array.isArray(currentDocs.sections) &&
-                currentDocs.sections.map((section, index) => {
-                  const translatedSection = getTranslatedContent(section);
-                  const sectionId = section.title
-                    .toLowerCase()
-                    .replace(/[^a-z0-9]+/g, "-")
-                    .replace(/(^-|-$)/g, "")
-                    .trim();
+              {currentDocs?.sections.map((section, index) => {
+                const { title, content } = getTranslatedContent(section);
+                const sectionId = title
+                  .toLowerCase()
+                  .replace(/[^a-z0-9]+/g, "-")
+                  .replace(/-+/g, "-")
+                  .replace(/^-|-$/g, "");
 
-                  return (
-                    <section
-                      key={index}
-                      id={sectionId}
-                      className="bg-white rounded-lg shadow-sm p-6 scroll-mt-24"
-                    >
-                      <div className="flex justify-between items-start mb-4">
-                        <h2 className="text-2xl font-bold text-gray-900">
-                          {translatedSection.title}
-                        </h2>
-                        <ShareSection
-                          sectionId={sectionId}
-                          title={translatedSection.title}
-                        />
-                      </div>
-                      <div
-                        className="prose prose-indigo max-w-none"
-                        dangerouslySetInnerHTML={sanitizeHTML(
-                          translatedSection.content
-                        )}
-                      />
+                return (
+                  <section
+                    key={sectionId}
+                    id={sectionId}
+                    className="mb-12 p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-200"
+                    data-section-index={index}
+                  >
+                    <div className="flex justify-between items-center mb-6">
+                      <h2 className="text-2xl font-bold text-gray-900">
+                        {title}
+                      </h2>
+                      <ShareSection sectionId={sectionId} title={title} />
+                    </div>
 
-                      {section.code && (
-                        <div className="mt-4">
-                          <div className="relative bg-gray-900 rounded-lg p-4 shadow-lg border border-gray-700">
-                            <div className="flex items-center mb-2 bg-gray-800 rounded-t-lg p-2 -mt-4 -mx-4 border-b border-gray-700">
-                              <div className="flex space-x-2">
-                                <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                                <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                                <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                              </div>
-                              <span className="ml-4 text-sm text-gray-400">
-                                Code
-                              </span>
-                              <button
-                                onClick={() => handleCopyCode(section.code)}
-                                className="ml-auto p-1 text-gray-400 hover:text-white rounded"
-                              >
-                                Copy Code
-                              </button>
-                            </div>
-                            <pre className="text-sm text-gray-100 overflow-x-auto font-mono">
-                              <code>{section.code}</code>
-                            </pre>
-                          </div>
-                          {section.preview && (
-                            <div className="mt-4">
-                              <h4 className="text-sm font-medium text-gray-500 mb-2">
-                                Preview
-                              </h4>
-                              {section.preview.type === "visual" &&
-                              section.preview.html ? (
-                                <div
-                                  className="border rounded-lg p-4 bg-white"
-                                  dangerouslySetInnerHTML={sanitizeHTML(
-                                    section.preview.html
-                                  )}
-                                />
-                              ) : (section.preview.type === "output" ||
-                                  section.preview.type === "console") &&
-                                (section.preview.output ||
-                                  section.preview.html) ? (
-                                <div className="bg-gray-900 rounded-lg p-4 shadow-lg border border-gray-700">
-                                  <div className="flex items-center mb-2 bg-gray-800 rounded-t-lg p-2 -mt-4 -mx-4 border-b border-gray-700">
-                                    <div className="flex space-x-2">
-                                      <div className="w-3 h-3 bg-red-500 rounded-full"></div>
-                                      <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
-                                      <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                                    </div>
-                                    <span className="ml-4 text-sm text-gray-400">
-                                      {section.preview.type === "console"
-                                        ? "Console"
-                                        : "Output"}
-                                    </span>
-                                  </div>
-                                  <pre className="text-sm text-green-400 font-mono">
-                                    {section.preview.output ||
-                                      section.preview.html}
-                                  </pre>
-                                </div>
-                              ) : null}
-                            </div>
-                          )}
+                    <div
+                      className="prose max-w-none"
+                      dangerouslySetInnerHTML={sanitizeHTML(content)}
+                    />
+
+                    {section.code && (
+                      <div className="mt-6 relative">
+                        <div className="absolute right-2 top-2">
+                          <button
+                            onClick={() => handleCopyCode(section.code)}
+                            className="bg-gray-800 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-700 transition-colors"
+                          >
+                            {t("documentation.common.copyCode")}
+                          </button>
                         </div>
-                      )}
-                    </section>
-                  );
-                })}
+                        <pre className="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto">
+                          <code>{section.code}</code>
+                        </pre>
+                      </div>
+                    )}
+
+                    {section.preview && (
+                      <div className="mt-6">
+                        <h3 className="text-lg font-semibold mb-3">
+                          {t("documentation.common.preview")}
+                        </h3>
+                        <div className="border rounded-lg p-4">
+                          <div
+                            dangerouslySetInnerHTML={sanitizeHTML(
+                              section.preview.html
+                            )}
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </section>
+                );
+              })}
             </div>
           </div>
         </div>

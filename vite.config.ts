@@ -94,11 +94,28 @@ export default defineConfig({
       },
     },
   ],
+  server: {
+    port: 3000,
+    host: true,
+  },
   base: "/",
   root: process.cwd(),
   publicDir: "public",
   build: {
     outDir: "dist",
-    assetsDir: "assets",
+    sourcemap: true,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ["react", "react-dom", "react-router-dom"],
+          translations: ["./src/translations"],
+        },
+      },
+    },
+  },
+  resolve: {
+    alias: {
+      "@": "/src",
+    },
   },
 });

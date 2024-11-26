@@ -8,6 +8,7 @@ import PreAlphaNotification from "./components/PreAlphaNotification";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { Analytics } from "@vercel/analytics/react";
 import Contribute from "./pages/Contribute";
+import { ToastContainer } from "./ui/Toast";
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
           </Routes>
         </main>
         <PreAlphaNotification />
+        <ToastContainer />
         <SpeedInsights />
         <Analytics />
       </div>

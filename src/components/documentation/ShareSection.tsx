@@ -11,22 +11,36 @@ export default function ShareSection({ sectionId, title }: ShareSectionProps) {
   const [showToast, setShowToast] = useState(false);
   const location = useLocation();
 
-  const currentUrl = new URL(window.location.href);
-  currentUrl.pathname = location.pathname;
-  currentUrl.hash = sectionId;
-  const shareUrl = currentUrl.toString();
+  const getShareUrl = () => {
+    const baseUrl = window.location.origin;
+    const path = location.pathname;
+    return `${baseUrl}${path}#${sectionId}`;
+  };
 
+  const shareUrl = getShareUrl();
   const encodedUrl = encodeURIComponent(shareUrl);
   const encodedTitle = encodeURIComponent(`${title} | BalDev Documentation`);
-  const encodedDescription = encodeURIComponent(
-    `Check out this section about ${title} in the BalDev documentation.`
-  );
 
   const copyToClipboard = async () => {
     try {
-      await navigator.clipboard.writeText(shareUrl);
-      setShowToast(true);
-      setTimeout(() => setShowToast(false), 2000);
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        await navigator.clipboard.writeText(shareUrl);
+        setShowToast(true);
+        setTimeout(() => setShowToast(false), 2000);
+      } else {
+        const textArea = document.createElement("textarea");
+        textArea.value = shareUrl;
+        document.body.appendChild(textArea);
+        textArea.select();
+        try {
+          document.execCommand("copy");
+          setShowToast(true);
+          setTimeout(() => setShowToast(false), 2000);
+        } catch (err) {
+          console.error("Fallback: Oops, unable to copy", err);
+        }
+        document.body.removeChild(textArea);
+      }
     } catch (err) {
       console.error("Failed to copy link:", err);
     }
@@ -34,7 +48,7 @@ export default function ShareSection({ sectionId, title }: ShareSectionProps) {
 
   const socialLinks = {
     twitter: `https://twitter.com/intent/tweet?url=${encodedUrl}&text=${encodedTitle}`,
-    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedDescription}`,
+    facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
     linkedin: `https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`,
   };
 

@@ -108,15 +108,6 @@
           "type": "console",
           "output": "Server running at http://localhost:3000/\nHello World"
         }
-      },
-      {
-        "title": "test",
-        "content": "test",
-        "code": "test",
-        "preview": {
-          "type": "visual",
-          "html": "test"
-        }
       }
     ]
   },
