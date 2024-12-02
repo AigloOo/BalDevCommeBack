@@ -1,23 +1,13 @@
-import React, { createContext, useState, useCallback } from "react";
+import React, { createContext, useState } from "react";
 import enTranslations from "../translations/en";
-import frTranslations from "../translations/fr";
-import { frenchDocumentation } from "../translations/documentation.fr";
 
-const translations = {
+const Translations = {
   en: enTranslations,
-  fr: frTranslations,
-};
-
-const documentationTranslations = {
-  fr: frenchDocumentation,
 };
 
 interface TranslationContextType {
   t: (key: string) => string;
   currentLanguage: string;
-  isLoading: boolean;
-  changeLanguage: (lang: string) => void;
-  getDocumentation: (category: string) => string | null;
 }
 
 export const TranslationContext = createContext<TranslationContextType | null>(
@@ -29,58 +19,33 @@ export function TranslationProvider({
 }: {
   children: React.ReactNode;
 }) {
-  const [currentLanguage, setCurrentLanguage] = useState(
-    () => localStorage.getItem("preferred-language") || "en"
-  );
-  const [isLoading, setIsLoading] = useState(false);
+  const [CurrentLanguage] = useState("en");
 
-  const changeLanguage = useCallback((lang: string) => {
-    setIsLoading(true);
-    setCurrentLanguage(lang);
-    localStorage.setItem("preferred-language", lang);
-    setIsLoading(false);
-  }, []);
+  const TranslateKey = (key: string) => {
+    const Keys = key.split(".");
+    let TranslationValue: Record<string, unknown> = Translations.en;
 
-  const getDocumentation = useCallback(
-    (category: string) => {
-      if (currentLanguage === "fr") {
-        return documentationTranslations.fr[
-          category as keyof typeof frenchDocumentation
-        ];
+    for (const CurrentKey of Keys) {
+      if (
+        TranslationValue &&
+        typeof TranslationValue === "object" &&
+        CurrentKey in TranslationValue
+      ) {
+        TranslationValue = TranslationValue[CurrentKey] as Record<
+          string,
+          unknown
+        >;
+      } else {
+        return key;
       }
-      return null;
-    },
-    [currentLanguage]
-  );
+    }
 
-  const t = useCallback(
-    (key: string) => {
-      const keys = key.split(".");
-      let value: any =
-        translations[currentLanguage as keyof typeof translations];
-
-      for (const k of keys) {
-        if (value && typeof value === "object" && k in value) {
-          value = value[k];
-        } else {
-          return key;
-        }
-      }
-
-      return typeof value === "string" ? value : key;
-    },
-    [currentLanguage]
-  );
+    return typeof TranslationValue === "string" ? TranslationValue : key;
+  };
 
   return (
     <TranslationContext.Provider
-      value={{
-        t,
-        currentLanguage,
-        isLoading,
-        changeLanguage,
-        getDocumentation,
-      }}
+      value={{ t: TranslateKey, currentLanguage: CurrentLanguage }}
     >
       {children}
     </TranslationContext.Provider>

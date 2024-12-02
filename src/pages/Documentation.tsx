@@ -16,8 +16,21 @@ interface Section {
   preview?: {
     type: string;
     html?: string;
-    output?: string;
   };
+  author?: {
+    username: string;
+    avatarUrl: string;
+    profileUrl: string;
+  };
+  examples?: {
+    title: string;
+    description: string;
+    code?: string;
+    preview?: {
+      type: string;
+      html?: string;
+    };
+  }[];
   translations?: {
     [lang: string]: {
       title: string;
@@ -180,9 +193,31 @@ export default function Documentation() {
                     data-section-index={index}
                   >
                     <div className="flex justify-between items-center mb-6">
-                      <h2 className="text-2xl font-bold text-gray-900">
-                        {title}
-                      </h2>
+                      <div className="flex items-center gap-4">
+                        <h2 className="text-2xl font-bold text-gray-900">
+                          {title}
+                        </h2>
+                        {section.author && (
+                          <div className="flex items-center gap-2 text-sm text-gray-500">
+                            <span>Added by</span>
+                            <a
+                              href={section.author.profileUrl}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center gap-2 hover:text-indigo-600 transition-colors"
+                            >
+                              <img
+                                src={section.author.avatarUrl}
+                                alt={section.author.username}
+                                className="w-6 h-6 rounded-full"
+                              />
+                              <span className="font-medium">
+                                {section.author.username}
+                              </span>
+                            </a>
+                          </div>
+                        )}
+                      </div>
                       <ShareSection sectionId={sectionId} title={title} />
                     </div>
 
@@ -191,35 +226,92 @@ export default function Documentation() {
                       dangerouslySetInnerHTML={sanitizeHTML(content)}
                     />
 
-                    {section.code && (
-                      <div className="mt-6 relative">
-                        <div className="absolute right-2 top-2">
-                          <button
-                            onClick={() => handleCopyCode(section.code)}
-                            className="bg-gray-800 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-700 transition-colors"
-                          >
-                            {t("documentation.common.copyCode")}
-                          </button>
-                        </div>
-                        <pre className="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto">
-                          <code>{section.code}</code>
-                        </pre>
-                      </div>
-                    )}
+                    {section.examples ? (
+                      <div className="mt-6 space-y-8">
+                        {section.examples.map((example, exampleIndex) => (
+                          <div key={exampleIndex} className="border-t pt-6">
+                            <h3 className="text-xl font-semibold mb-4">
+                              {example.title}
+                            </h3>
+                            <div
+                              className="prose max-w-none mb-4"
+                              dangerouslySetInnerHTML={sanitizeHTML(
+                                example.description
+                              )}
+                            />
 
-                    {section.preview && (
-                      <div className="mt-6">
-                        <h3 className="text-lg font-semibold mb-3">
-                          {t("documentation.common.preview")}
-                        </h3>
-                        <div className="border rounded-lg p-4">
-                          <div
-                            dangerouslySetInnerHTML={sanitizeHTML(
-                              section.preview.html
+                            {example.code && (
+                              <div className="relative">
+                                <div className="absolute right-2 top-2">
+                                  <button
+                                    onClick={() => handleCopyCode(example.code)}
+                                    className="bg-gray-800 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-700 transition-colors"
+                                  >
+                                    {t("documentation.common.copyCode")}
+                                  </button>
+                                </div>
+                                <pre className="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto">
+                                  <code>{example.code}</code>
+                                </pre>
+                              </div>
                             )}
-                          />
-                        </div>
+
+                            {example.preview && (
+                              <div className="mt-4">
+                                <h4 className="text-lg font-semibold mb-3">
+                                  {t("documentation.common.preview")}
+                                </h4>
+                                <div className="border rounded-lg p-4">
+                                  {example.preview.type === "visual" ? (
+                                    <div
+                                      dangerouslySetInnerHTML={sanitizeHTML(
+                                        example.preview.html || ""
+                                      )}
+                                    />
+                                  ) : (
+                                    <div className="bg-gray-900 text-white p-4 rounded font-mono whitespace-pre-wrap">
+                                      {example.preview.html}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        ))}
                       </div>
+                    ) : (
+                      <>
+                        {section.code && (
+                          <div className="mt-6 relative">
+                            <div className="absolute right-2 top-2">
+                              <button
+                                onClick={() => handleCopyCode(section.code)}
+                                className="bg-gray-800 text-white px-3 py-1 rounded-md text-sm hover:bg-gray-700 transition-colors"
+                              >
+                                {t("documentation.common.copyCode")}
+                              </button>
+                            </div>
+                            <pre className="bg-gray-900 text-white p-4 rounded-lg overflow-x-auto">
+                              <code>{section.code}</code>
+                            </pre>
+                          </div>
+                        )}
+
+                        {section.preview && (
+                          <div className="mt-6">
+                            <h3 className="text-lg font-semibold mb-3">
+                              {t("documentation.common.preview")}
+                            </h3>
+                            <div className="border rounded-lg p-4">
+                              <div
+                                dangerouslySetInnerHTML={sanitizeHTML(
+                                  section.preview.html
+                                )}
+                              />
+                            </div>
+                          </div>
+                        )}
+                      </>
                     )}
                   </section>
                 );

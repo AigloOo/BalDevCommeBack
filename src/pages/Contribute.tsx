@@ -109,6 +109,11 @@ export default function Contribute() {
           [formData.previewType === "visual" ? "html" : "output"]:
             formData.previewContent,
         },
+        author: {
+          username: username,
+          avatarUrl: `https://github.com/${username}.png`,
+          profileUrl: `https://github.com/${username}`,
+        },
       };
 
       const updatedContent = {

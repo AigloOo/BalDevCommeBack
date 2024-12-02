@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
-import { useTranslation } from "../../hooks/useTranslation";
 
 interface MetaTagsProps {
   title?: string;
@@ -10,46 +9,36 @@ interface MetaTagsProps {
 }
 
 export default function MetaTags({
-  title,
-  description,
+  title = "Web Development Documentation",
+  description = "Discover, contribute, and learn from the collective knowledge of developers worldwide.",
   image = "/og-image.png",
   type = "website",
 }: MetaTagsProps) {
   const location = useLocation();
-  const { currentLanguage } = useTranslation();
 
   useEffect(() => {
-    const baseUrl = "https://baldev.jean-winter.fr";
-    const currentUrl = `${baseUrl}${location.pathname}`;
+    document.title = title;
 
-    document.title = title
-      ? `${title} | BalDev`
-      : "BalDev - Web Development Documentation";
+    const metaTags = [
+      { property: "og:title", content: title },
+      { property: "og:description", content: description },
+      { property: "og:image", content: image },
+      { property: "og:type", content: type },
+      {
+        property: "og:url",
+        content: `https://baldev.jean-winter.fr${location.pathname}`,
+      },
+    ];
 
-    const metaTags = {
-      "og:title": title,
-      "og:description": description,
-      "og:image": `${baseUrl}${image}`,
-      "og:url": currentUrl,
-      "og:type": type,
-      "og:locale": currentLanguage === "fr" ? "fr_FR" : "en_US",
-      "twitter:title": title,
-      "twitter:description": description,
-      "twitter:image": `${baseUrl}${image}`,
-      "twitter:url": currentUrl,
-    };
-
-    Object.entries(metaTags).forEach(([name, content]) => {
-      if (content) {
-        const elements = document.getElementsByTagName("meta");
-        for (let i = 0; i < elements.length; i++) {
-          if (elements[i].getAttribute("property") === name) {
-            elements[i].setAttribute("content", content);
-          }
+    metaTags.forEach(({ property, content }) => {
+      const elements = document.getElementsByTagName("meta");
+      for (let i = 0; i < elements.length; i++) {
+        if (elements[i].getAttribute("property") === property) {
+          elements[i].setAttribute("content", content);
         }
       }
     });
-  }, [title, description, image, type, location, currentLanguage]);
+  }, [title, description, image, type, location]);
 
   return null;
 }

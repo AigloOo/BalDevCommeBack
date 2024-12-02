@@ -15,18 +15,18 @@ import Contributors from "../components/features/Contributors";
 import { motion } from "framer-motion";
 
 export default function Home() {
-  const [searchQuery, setSearchQuery] = useState("");
-  const navigate = useNavigate();
-  const [stats, setStats] = useState({
-    totalDocs: 0,
-    totalContributors: 0,
-    lastUpdated: "",
-    stars: 0,
-    forks: 0,
-    openIssues: 0,
-    watchers: 0,
-    commits: 0,
-    pullRequests: 0,
+  const [SearchQuery, setSearchQuery] = useState("");
+  const Navigate = useNavigate();
+  const [Stats, setStats] = useState({
+    TotalDocs: 0,
+    TotalContributors: 0,
+    LastUpdated: "",
+    Stars: 0,
+    Forks: 0,
+    OpenIssues: 0,
+    Watchers: 0,
+    Commits: 0,
+    PullRequests: 0,
   });
   const { t } = useTranslation();
 
@@ -34,17 +34,17 @@ export default function Home() {
   const REPO_OWNER = "AigloOo";
   const REPO_NAME = "BalDevCommeBack";
 
-  const handleSearch = (e: React.FormEvent) => {
+  const HandleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+    if (SearchQuery.trim()) {
+      Navigate(`/search?q=${encodeURIComponent(SearchQuery.trim())}`);
     }
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    const FetchData = async () => {
       try {
-        const [repoResponse, commitsResponse, pullsResponse] =
+        const [RepoResponse, CommitsResponse, PullsResponse] =
           await Promise.all([
             fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`, {
               headers: {
@@ -76,45 +76,45 @@ export default function Home() {
             ),
           ]);
 
-        const [repoData, commitsData, pullsData] = await Promise.all([
-          repoResponse.json(),
-          commitsResponse.json(),
-          pullsResponse.json(),
+        const [RepoData, CommitsData, PullsData] = await Promise.all([
+          RepoResponse.json(),
+          CommitsResponse.json(),
+          PullsResponse.json(),
         ]);
 
         setStats({
-          totalDocs: repoData.size || 0,
-          totalContributors: repoData.subscribers_count || 0,
-          lastUpdated: repoData.updated_at
-            ? new Date(repoData.updated_at).toLocaleDateString()
+          TotalDocs: RepoData.size || 0,
+          TotalContributors: RepoData.subscribers_count || 0,
+          LastUpdated: RepoData.updated_at
+            ? new Date(RepoData.updated_at).toLocaleDateString()
             : "",
-          stars: repoData.stargazers_count || 0,
-          forks: repoData.forks_count || 0,
-          openIssues: repoData.open_issues_count || 0,
-          watchers: repoData.watchers_count || 0,
-          commits: Array.isArray(commitsData) ? commitsData.length : 0,
-          pullRequests: Array.isArray(pullsData) ? pullsData.length : 0,
+          Stars: RepoData.stargazers_count || 0,
+          Forks: RepoData.forks_count || 0,
+          OpenIssues: RepoData.open_issues_count || 0,
+          Watchers: RepoData.watchers_count || 0,
+          Commits: Array.isArray(CommitsData) ? CommitsData.length : 0,
+          PullRequests: Array.isArray(PullsData) ? PullsData.length : 0,
         });
       } catch (error) {
         console.error("Error fetching data:", error);
         setStats({
-          totalDocs: 0,
-          totalContributors: 0,
-          lastUpdated: "",
-          stars: 0,
-          forks: 0,
-          openIssues: 0,
-          watchers: 0,
-          commits: 0,
-          pullRequests: 0,
+          TotalDocs: 0,
+          TotalContributors: 0,
+          LastUpdated: "",
+          Stars: 0,
+          Forks: 0,
+          OpenIssues: 0,
+          Watchers: 0,
+          Commits: 0,
+          PullRequests: 0,
         });
       }
     };
 
-    fetchData();
+    FetchData();
   }, []);
 
-  const features = [
+  const Features = [
     {
       icon: <BookOpen className="h-10 w-10 text-indigo-600" />,
       title: t("features.comprehensive.title"),
@@ -134,7 +134,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-indigo-50 via-white to-indigo-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-6xL mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -146,7 +146,7 @@ export default function Home() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.7 }}
-              className="text-5xl tracking-tight font-extrabold text-gray-900 sm:text-6xl md:text-7xl"
+              className="text-3xl tracking-tight font-extrabold text-gray-900 sm:text-4xl md:text-5xl w-11/12 mx-auto "
             >
               <span className="block bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 to-purple-600">
                 {t("home.title")}
@@ -176,11 +176,11 @@ export default function Home() {
               transition={{ delay: 0.6 }}
               className="mt-10"
             >
-              <form onSubmit={handleSearch} className="max-w-xl mx-auto">
+              <form onSubmit={HandleSearch} className="max-w-xl mx-auto">
                 <div className="relative rounded-full shadow-lg">
                   <input
                     type="text"
-                    value={searchQuery}
+                    value={SearchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                     placeholder={t("home.searchPlaceholder")}
                     className="block w-full pl-8 pr-14 py-5 rounded-full border-2 border-indigo-100 focus:ring-4 focus:ring-indigo-200 focus:border-indigo-500 transition-all duration-300 text-lg"
@@ -196,7 +196,7 @@ export default function Home() {
             </motion.div>
 
             <div className="mt-16 grid grid-cols-1 gap-10 sm:grid-cols-3">
-              {features.map((feature, index) => (
+              {Features.map((Feature, index) => (
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -211,20 +211,20 @@ export default function Home() {
                       transition={{ type: "spring", stiffness: 400 }}
                       className="mb-6"
                     >
-                      {feature.icon}
+                      {Feature.icon}
                     </motion.div>
                     <h3 className="text-xl font-bold text-gray-900 mb-3">
-                      {feature.title}
+                      {Feature.title}
                     </h3>
                     <p className="text-gray-600 text-center leading-relaxed">
-                      {feature.description}
+                      {Feature.description}
                     </p>
                   </div>
                 </motion.div>
               ))}
             </div>
 
-            <GitHubStats stats={stats} />
+            <GitHubStats stats={Stats} />
             <Contributors />
           </div>
         </motion.div>

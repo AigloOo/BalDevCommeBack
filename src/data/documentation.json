@@ -70,12 +70,36 @@
       },
       {
         "title": "Transitions & Animations",
-        "content": "<p>CSS transitions and animations create smooth visual effects.</p><ul><li>Smooth transitions between states</li><li>Custom keyframe animations</li><li>Configurable timing and duration</li></ul>",
-        "code": ".animated-element {\n  transition: all 0.3s ease;\n}\n\n@keyframes slide-in {\n  from { transform: translateX(-100%); }\n  to { transform: translateX(0); }\n}\n\n.sliding-element {\n  animation: slide-in 0.5s ease-out;\n}",
-        "preview": {
-          "type": "visual",
-          "html": "<div style='padding:1rem;background:#f3f4f6;border-radius:0.5rem'><div style='padding:1rem;background:white;border-radius:0.25rem;transition:all 0.3s ease;cursor:pointer;transform:translateX(0)' onmouseover='this.style.transform=\"translateX(20px)\"' onmouseout='this.style.transform=\"translateX(0)\"'>Hover me</div></div>"
-        }
+        "content": "<p>Les transitions et animations CSS permettent de créer des effets visuels fluides et dynamiques. Voici plusieurs exemples pratiques :</p>",
+        "examples": [
+          {
+            "title": "Transition Simple",
+            "description": "<p>Une transition basique sur le survol d'un élément.</p>",
+            "code": ".TransitionButton {\n  background: #4F46E5;\n  color: white;\n  padding: 10px 20px;\n  border-radius: 4px;\n  transition: transform 0.3s ease;\n}\n\n.TransitionButton:hover {\n  transform: scale(1.1);\n}",
+            "preview": {
+              "type": "visual",
+              "html": "<button style='background:#4F46E5;color:white;padding:10px 20px;border-radius:4px;border:none;transition:transform 0.3s ease;cursor:pointer' onmouseover='this.style.transform=\"scale(1.1)\"' onmouseout='this.style.transform=\"scale(1)\"'>Survolez-moi</button>"
+            }
+          },
+          {
+            "title": "Animation Keyframes",
+            "description": "<p>Animation personnalisée utilisant @keyframes pour créer un effet de rebond.</p>",
+            "code": "@keyframes BounceAnimation {\n  0% { transform: translateY(0); }\n  50% { transform: translateY(-20px); }\n  100% { transform: translateY(0); }\n}\n\n.BouncingElement {\n  animation: BounceAnimation 1s ease infinite;\n}",
+            "preview": {
+              "type": "visual",
+              "html": "<div style='text-align:center'><div style='display:inline-block;padding:20px;background:#4F46E5;color:white;border-radius:50%;animation:bounce 1s ease infinite' id='bounceElement'>🎾</div></div><style>@keyframes bounce{0%{transform:translateY(0)}50%{transform:translateY(-20px)}100%{transform:translateY(0)}}</style>"
+            }
+          },
+          {
+            "title": "Transition Multiple",
+            "description": "<p>Transition affectant plusieurs propriétés avec des durées différentes.</p>",
+            "code": ".MultiTransitionCard {\n  background: white;\n  padding: 20px;\n  border-radius: 8px;\n  box-shadow: 0 2px 4px rgba(0,0,0,0.1);\n  transition: all 0.3s ease;\n}\n\n.MultiTransitionCard:hover {\n  transform: translateY(-5px);\n  box-shadow: 0 4px 8px rgba(0,0,0,0.2);\n  background: #F3F4F6;\n}",
+            "preview": {
+              "type": "visual",
+              "html": "<div style='padding:20px;background:white;border-radius:8px;box-shadow:0 2px 4px rgba(0,0,0,0.1);transition:all 0.3s ease;cursor:pointer' onmouseover='this.style.transform=\"translateY(-5px)\";this.style.boxShadow=\"0 4px 8px rgba(0,0,0,0.2)\";this.style.background=\"#F3F4F6\"' onmouseout='this.style.transform=\"translateY(0)\";this.style.boxShadow=\"0 2px 4px rgba(0,0,0,0.1)\";this.style.background=\"white\"'>Carte Interactive</div>"
+            }
+          }
+        ]
       },
       {
         "title": "Media Queries",
@@ -125,20 +149,20 @@
       },
       {
         "title": "Navigation & Lists",
-        "content": "<p>Navigation menus and lists help organize content in a structured way.</p><ul><li>Unordered and ordered lists</li><li>Navigation menus with links</li><li>Definition lists</li></ul>",
-        "code": "<nav>\n  <ul>\n    <li><a href=\"#home\">Home</a></li>\n    <li><a href=\"#about\">About</a></li>\n  </ul>\n</nav>",
+        "content": "<p>Navigation menus and lists are essential components for organizing and structuring web content effectively. They provide clear hierarchies and improve user experience.</p><ul><li>Unordered lists (ul) for non-sequential items with bullet points</li><li>Ordered lists (ol) for sequential items with numbers</li><li>Definition lists (dl) with terms (dt) and descriptions (dd)</li><li>Navigation menus using semantic nav element</li><li>Nested lists for multi-level navigation</li><li>List styling options with CSS</li><li>ARIA roles for accessibility</li><li>Mobile-friendly navigation patterns</li></ul>",
+        "code": "<nav aria-label=\"Main navigation\">\n  <ul>\n    <li><a href=\"#home\" aria-current=\"page\">Home</a></li>\n    <li><a href=\"#about\">About</a></li>\n    <li>\n      <a href=\"#services\">Services</a>\n      <ul>\n        <li><a href=\"#web\">Web Development</a></li>\n        <li><a href=\"#mobile\">Mobile Apps</a></li>\n      </ul>\n    </li>\n    <li><a href=\"#contact\">Contact</a></li>\n  </ul>\n</nav>\n\n<dl>\n  <dt>HTML</dt>\n  <dd>HyperText Markup Language</dd>\n  <dt>CSS</dt>\n  <dd>Cascading Style Sheets</dd>\n</dl>",
         "preview": {
           "type": "visual",
-          "html": "<nav style='background:#f3f4f6;padding:1rem;border-radius:0.5rem'><ul style='list-style:none;margin:0;padding:0'><li style='display:inline;margin-right:1rem'><a href='#home' style='color:#4f46e5;text-decoration:none'>Home</a></li><li style='display:inline'><a href='#about' style='color:#4f46e5;text-decoration:none'>About</a></li></ul></nav>"
+          "html": "<div style='background:#f3f4f6;padding:1.5rem;border-radius:0.5rem'><nav style='background:white;padding:1rem;border-radius:0.25rem;margin-bottom:1rem'><ul style='list-style:none;margin:0;padding:0;display:flex;gap:1.5rem'><li><a href='#home' style='color:#4f46e5;text-decoration:none;font-weight:500'>Home</a></li><li><a href='#about' style='color:#4f46e5;text-decoration:none'>About</a></li><li><a href='#services' style='color:#4f46e5;text-decoration:none'>Services</a></li><li><a href='#contact' style='color:#4f46e5;text-decoration:none'>Contact</a></li></ul></nav><dl style='background:white;padding:1rem;border-radius:0.25rem;margin:0'><dt style='font-weight:600;color:#111'>HTML</dt><dd style='margin-left:1rem;color:#4b5563'>HyperText Markup Language</dd><dt style='font-weight:600;color:#111;margin-top:0.5rem'>CSS</dt><dd style='margin-left:1rem;color:#4b5563'>Cascading Style Sheets</dd></dl></div>"
         }
       },
       {
         "title": "Forms & Input",
-        "content": "<p>Forms allow user input and data collection.</p><ul><li>Various input types for different data</li><li>Form validation and submission</li><li>Labels for accessibility</li></ul>",
-        "code": "<form>\n  <label for=\"name\">Name:</label>\n  <input type=\"text\" id=\"name\" required>\n  <label for=\"email\">Email:</label>\n  <input type=\"email\" id=\"email\">\n  <button type=\"submit\">Submit</button>\n</form>",
+        "content": "<p>HTML forms are essential interactive elements that enable users to input data and communicate with web applications. They serve as the primary interface for user data collection, account creation, search functionality, and more.</p><ul><li>Input types: text, email, password, number, tel, url, date, time, file, checkbox, radio, etc.</li><li>Form validation includes built-in HTML5 validation (required, pattern, min/max) and custom JavaScript validation</li><li>Form submission methods: GET and POST with various data encoding types</li><li>Semantic form structure with fieldset and legend elements</li><li>ARIA labels and descriptions for enhanced accessibility</li><li>Client-side and server-side data processing</li><li>Security considerations including CSRF protection and data sanitization</li><li>Responsive form design patterns</li></ul>",
+        "code": "<form method=\"post\" action=\"/submit\" autocomplete=\"on\">\n  <fieldset>\n    <legend>Personal Information</legend>\n    \n    <div class=\"FormGroup\">\n      <label for=\"name\">Full Name:</label>\n      <input type=\"text\" id=\"name\" name=\"FullName\" required\n             minlength=\"2\" maxlength=\"50\"\n             placeholder=\"Enter your full name\"\n             pattern=\"[A-Za-z ]+\">\n      <span class=\"FormHint\">Letters and spaces only</span>\n    </div>\n\n    <div class=\"FormGroup\">\n      <label for=\"email\">Email Address:</label>\n      <input type=\"email\" id=\"email\" name=\"EmailAddress\"\n             required placeholder=\"you@example.com\"\n             autocomplete=\"email\">\n      <span class=\"FormHint\">We'll never share your email</span>\n    </div>\n\n    <div class=\"FormGroup\">\n      <label for=\"phone\">Phone Number:</label>\n      <input type=\"tel\" id=\"phone\" name=\"PhoneNumber\"\n             pattern=\"[0-9]{10}\"\n             placeholder=\"1234567890\">\n    </div>\n\n    <div class=\"FormControls\">\n      <button type=\"submit\" class=\"SubmitButton\">Submit Form</button>\n      <button type=\"reset\" class=\"ResetButton\">Clear Form</button>\n    </div>\n  </fieldset>\n</form>",
         "preview": {
           "type": "visual",
-          "html": "<form style='background:#f3f4f6;padding:1rem;border-radius:0.5rem'><div style='margin-bottom:1rem'><label for='name' style='display:block;margin-bottom:0.5rem'>Name:</label><input type='text' id='name' required style='padding:0.5rem;border-radius:0.25rem;border:1px solid #d1d5db;width:100%'></div><div style='margin-bottom:1rem'><label for='email' style='display:block;margin-bottom:0.5rem'>Email:</label><input type='email' id='email' style='padding:0.5rem;border-radius:0.25rem;border:1px solid #d1d5db;width:100%'></div><button type='submit' style='background:#4f46e5;color:white;padding:0.5rem 1rem;border-radius:0.25rem;border:none'>Submit</button></form>"
+          "html": "<form style='background:#f3f4f6;padding:1.5rem;border-radius:0.5rem'><fieldset style='border:1px solid #d1d5db;padding:1.5rem;border-radius:0.375rem'><legend style='padding:0 0.5rem;font-weight:600;color:#374151'>Personal Information</legend><div style='margin-bottom:1.5rem'><label for='name' style='display:block;margin-bottom:0.5rem;font-weight:500'>Full Name:</label><input type='text' id='name' required minlength='2' maxlength='50' placeholder='Enter your full name' style='width:100%;padding:0.75rem;border:1px solid #d1d5db;border-radius:0.375rem;margin-bottom:0.25rem'><span style='font-size:0.875rem;color:#6b7280'>Letters and spaces only</span></div><div style='margin-bottom:1.5rem'><label for='email' style='display:block;margin-bottom:0.5rem;font-weight:500'>Email Address:</label><input type='email' id='email' required placeholder='you@example.com' style='width:100%;padding:0.75rem;border:1px solid #d1d5db;border-radius:0.375rem;margin-bottom:0.25rem'><span style='font-size:0.875rem;color:#6b7280'>We'll never share your email</span></div><div style='margin-bottom:1.5rem'><label for='phone' style='display:block;margin-bottom:0.5rem;font-weight:500'>Phone Number:</label><input type='tel' id='phone' placeholder='1234567890' style='width:100%;padding:0.75rem;border:1px solid #d1d5db;border-radius:0.375rem'></div><div style='display:flex;gap:1rem'><button type='submit' style='flex:1;background:#4f46e5;color:white;font-weight:500;padding:0.75rem;border:none;border-radius:0.375rem'>Submit Form</button><button type='reset' style='flex:1;background:#fff;border:1px solid #d1d5db;padding:0.75rem;border-radius:0.375rem'>Clear Form</button></div></fieldset></form>"
         }
       },
       {
@@ -171,7 +195,7 @@
       {
         "title": "Advanced Form Elements",
         "content": "<p>Complex form controls and inputs</p>",
-        "code": "<form>\n  <fieldset>\n    <legend>Personal Info</legend>\n    <input type=\"date\" name=\"birth\">\n    <input type=\"color\" name=\"favorite\">\n    <input type=\"range\" min=\"0\" max=\"100\">\n    <input type=\"file\" accept=\"image/*\" multiple>\n    <input type=\"datetime-local\">\n    <input type=\"search\" placeholder=\"Search...\">\n    <input type=\"tel\" pattern=\"[0-9]{10}\">\n    <input type=\"url\" placeholder=\"https://\">\n    <input type=\"week\">\n    <input type=\"time\">\n    <input type=\"month\">\n    <input type=\"number\" step=\"0.01\">\n    <textarea rows=\"4\" cols=\"50\"></textarea>\n    <select multiple>\n      <optgroup label=\"Group 1\">\n        <option value=\"1\">Option 1</option>\n      </optgroup>\n    </select>\n    <datalist id=\"suggestions\">\n      <option value=\"Suggestion 1\">\n    </datalist>\n    <output name=\"result\"></output>\n    <progress value=\"70\" max=\"100\"></progress>\n    <meter value=\"0.6\"></meter>\n  </fieldset>\n</form>",
+        "code": "<form>\n  <fieldset>\n    <legend>Personal Info</legend>\n    <input type=\"date\" name=\"birth\">\n    <input type=\"color\" name=\"favorite\">\n    <input type=\"range\" min=\"0\" max=\"100\">\n    <input type=\"file\" accept=\"image/*\" multiple capture=\"environment\">\n    <input type=\"datetime-local\">\n    <input type=\"search\" placeholder=\"Search...\">\n    <input type=\"tel\" pattern=\"[0-9]{10}\">\n    <input type=\"url\" placeholder=\"https://\">\n    <input type=\"week\">\n    <input type=\"time\">\n    <input type=\"month\">\n    <input type=\"number\" step=\"0.01\">\n    <textarea rows=\"4\" cols=\"50\"></textarea>\n    <select multiple>\n      <optgroup label=\"Group 1\">\n        <option value=\"1\">Option 1</option>\n      </optgroup>\n    </select>\n    <datalist id=\"suggestions\">\n      <option value=\"Suggestion 1\">\n    </datalist>\n    <output name=\"result\"></output>\n    <progress value=\"70\" max=\"100\"></progress>\n    <meter value=\"0.6\"></meter>\n  </fieldset>\n</form>",
         "preview": {
           "type": "visual",
           "html": "<form style='background:#f3f4f6;padding:1rem;border-radius:0.5rem'><fieldset style='border:1px solid #d1d5db;padding:1rem'><legend style='padding:0 0.5rem'>Personal Info</legend><div style='display:grid;gap:1rem'><input type='date' style='padding:0.5rem'><input type='color' style='width:100%;height:40px'><input type='range' min='0' max='100' style='width:100%'><input type='file' accept='image/*' multiple><input type='datetime-local' style='padding:0.5rem'><input type='search' placeholder='Search...' style='padding:0.5rem'><input type='tel' pattern='[0-9]{10}' style='padding:0.5rem'><input type='url' placeholder='https://' style='padding:0.5rem'><progress value='70' max='100' style='width:100%'></progress><meter value='0.6' style='width:100%'></meter></div></fieldset></form>"
