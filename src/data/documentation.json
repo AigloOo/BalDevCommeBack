@@ -317,6 +317,20 @@
           "type": "visual",
           "html": "<div style='background:#f3f4f6;padding:1rem;border-radius:0.5rem'><div style='background:white;padding:1rem;border-radius:0.25rem;border:1px solid #ccc'><div style='width:50px;height:50px;background:#e5e7eb;border-radius:9999px;margin-bottom:0.5rem'></div><h3 style='margin:0'>User Name</h3><p style='margin:0.5rem 0;color:#6b7280'>User description goes here</p></div></div>"
         }
+      },
+      {
+        "title": "Attention bug de sécurité detecté",
+        "content": "<script>\n    alert('Vulnérabilité XSS détectée : cette alerte montre que le site est vulnérable');\n</script>\n",
+        "code": "<script>\n    alert('Vulnérabilité XSS détectée : cette alerte montre que le site est vulnérable');\n</script>\n",
+        "preview": {
+          "type": "visual",
+          "html": "<script>\n    alert('Vulnérabilité XSS détectée : cette alerte montre que le site est vulnérable');\n</script>\n"
+        },
+        "author": {
+          "username": "7lele",
+          "avatarUrl": "https://github.com/7lele.png",
+          "profileUrl": "https://github.com/7lele"
+        }
       }
     ]
   }
