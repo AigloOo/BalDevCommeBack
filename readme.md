@@ -1,169 +1,36 @@
-# BalDev Documentation - Contribution Guide
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
-[English](#english) | [Français](#français)
+## Getting Started
 
-## English
-
-### How to Contribute
-
-Thank you for your interest in contributing to BalDev Documentation! There are several ways you can help improve the project:
-
-#### 1. Adding or Updating Documentation
-
-1. Fork the repository
-2. Create a new branch: `git checkout -b feature/your-feature-name`
-3. Add your content in `src/data/documentation.json`
-4. Follow the existing structure:
-
-```json
-{
-  "category": {
-    "title": "Category Title",
-    "sections": [
-      {
-        "title": "Section Title",
-        "content": "HTML content with <p> and <ul> tags",
-        "code": "Your code example",
-        "preview": {
-          "type": "visual or console",
-          "html": "Preview HTML"
-        }
-      }
-    ]
-  }
-}
-```
-
-#### 2. Adding Translations
-
-1. Navigate to `src/translations/`
-2. Add or modify translation files:
-   - For new languages: Create `[language-code].ts`
-   - Follow the structure in existing files like `en.ts` or `fr.ts`
-3. Update the language selector in `src/components/LanguageSelector.tsx`
-
-#### 3. Bug Fixes
-
-1. Check existing issues or create a new one
-2. Fork and clone the repository
-3. Create a bug fix branch: `git checkout -b fix/bug-name`
-4. Implement your fix
-5. Test thoroughly
-6. Submit a pull request with:
-   - Clear description of the fix
-   - Steps to reproduce the bug
-   - Screenshots if applicable
-
-#### 4. Feature Development
-
-1. Discuss new features in Issues first
-2. Fork and create a feature branch
-3. Implement the feature
-4. Add tests if applicable
-5. Update documentation
-6. Submit a pull request
-
-### Development Setup
+First, run the development server:
 
 ```bash
-# Install dependencies
-npm install
-
-# Run development server
 npm run dev
-
-# Build for production
-npm run build
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
 
----
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-## Français
+You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
-### Comment Contribuer
+This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
-Merci de votre intérêt pour contribuer à BalDev Documentation ! Voici les différentes façons d'améliorer le projet:
-(le systeme va etre améliorer grance a la page https://baldev.jean-winter.fr/contribute
+## Learn More
 
-#### 1. Ajouter ou Mettre à Jour la Documentation
+To learn more about Next.js, take a look at the following resources:
 
-1. Forkez le dépôt
-2. Créez une nouvelle branche : `git checkout -b feature/nom-de-votre-feature`
-3. Ajoutez votre contenu dans `src/data/documentation.json`
-4. Suivez la structure existante :
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
 
-```json
-{
-  "categorie": {
-    "title": "Titre de la Catégorie (langage de programmation web si la catégorie n'existe pas déjà)",
-    "sections": [
-      {
-        "title": "Titre de la Section",
-        "content": "Contenu HTML avec balises <p> et <ul> pour le contenu de votre section",
-        "code": "Votre exemple de code",
-        "preview": {
-          "type": "visual ou console",
-          "html": "Aperçu HTML ou console"
-        }
-      }
-    ]
-  }
-}
-```
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
 
-#### 2. Ajouter des Traductions
+## Deploy on Vercel
 
-1. Accédez au dossier `src/translations/`
-2. Ajoutez ou modifiez les fichiers de traduction :
-   - Pour nouvelles langues : Créez `[code-langue].ts`
-   - Suivez la structure des fichiers existants comme `en.ts` ou `fr.ts` ou documentation.fr.ts sachant que de base la documentation est en anglais
-3. Mettez à jour le sélecteur de langue dans `src/components/LanguageSelector.tsx`
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
-#### 3. Correction de Bugs
-
-1. Vérifiez les issues existantes ou créez-en une nouvelle
-2. Forkez et clonez le dépôt
-3. Créez une branche de correction : `git checkout -b fix/nom-du-bug`
-4. Implémentez votre correction
-5. Testez minutieusement
-6. Soumettez une pull request avec :
-   - Description claire de la correction
-   - Étapes pour reproduire le bug
-   - Captures d'écran si nécessaire
-
-#### 4. Développement de Fonctionnalités
-
-1. Discutez des nouvelles fonctionnalités dans les Issues
-2. Forkez et créez une branche de fonctionnalité
-3. Implémentez la fonctionnalité
-4. Ajoutez des tests si applicable
-5. Mettez à jour la documentation
-6. Soumettez une pull request
-
-### Configuration de Développement
-
-```bash
-# Installer les dépendances
-npm install
-
-# Lancer le serveur de développement
-npm run dev
-
-# Construire pour la production
-npm run build
-```
-
----
-
-## Licence
-
-Ce projet est sous licence GNU GPL v3 avec les restrictions supplémentaires suivantes :
-
-- ⛔ Utilisation commerciale interdite
-- ✅ Modification autorisée
-- ✅ Distribution autorisée
-- ✅ Utilisation privée autorisée
-- 📝 Attribution obligatoire
-- 🔄 Les travaux dérivés doivent utiliser la même licence
-
-Pour plus de détails, voir le fichier [LICENSE](LICENSE).
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
